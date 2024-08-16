@@ -55,7 +55,10 @@ class ActivityService(
         dailyActivityRepository.save(
             DailyActivity(
                 activity = activity,
-                date = LocalDateTime.now(),
+                startTime = request.startTime,
+                endTime = request.endTime,
+                location = request.location,
+                memo = request.memo,
             ),
         )
     }
@@ -96,9 +99,30 @@ class ActivityService(
         }
     }
 
+    fun findMonthActivity(
+        userId: Long,
+        year: Int,
+        month: Int,
+    ): List<ActivityResponse> {
+        val activities = activityRepository.findAllByUserIdAndYearAndMonth(userId, year, month)
+
+        return activities.map {
+            ActivityResponse(
+                activityId = it.id,
+                exerciseName = it.exercise.name,
+                userName = it.user.name,
+                exercise = it.exercise,
+                startDate = it.startDate,
+                goalFrequency = it.goalFrequency,
+                goalDuration = it.goalDuration,
+                goalPercent = calculateAchievementRate(it),
+            )
+        }
+    }
+
     fun calculateAchievementRate(activity: Activity): Double {
         val totalTarget = activity.goalFrequency * activity.goalDuration * 4
-        val completedSessions = dailyActivityRepository.countDailyActivityByActivityId(activity.id)
+        val completedSessions = dailyActivityRepository.countDailyActivityByActivityIdAndStartTimeBefore(activity.id)
         return (completedSessions.toDouble() / totalTarget) * 100
     }
 }

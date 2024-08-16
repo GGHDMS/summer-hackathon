@@ -15,6 +15,11 @@ data class KakaoMy
         @JsonIgnoreProperties(ignoreUnknown = true)
         data class KakaoAccount(
             val email: String,
-            val name: String,
+            val profile: Profile,
+        )
+
+        @JsonIgnoreProperties(ignoreUnknown = true)
+        data class Profile(
+            val nickname: String,
         )
     }

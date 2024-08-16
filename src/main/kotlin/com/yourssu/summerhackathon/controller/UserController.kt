@@ -23,9 +23,9 @@ class UserController(
 ) {
     @GetMapping("/login")
     fun getOauthLogin(): RedirectView {
-        val apiKey = "6f93d7eeed22bda00467a44225180c61"
+        val apiKey = "d9d7679d11df6ee7be85c04af10ce5d7"
         val redirectUrl =
-            "https://kauth.kakao.com/oauth/authorize?client_id=$apiKey&redirect_uri=http://localhost:3000&response_type=code"
+            "https://kauth.kakao.com/oauth/authorize?client_id=$apiKey&redirect_uri=http://localhost:3000&response_type=code&prompt=login"
 
         return RedirectView(redirectUrl)
     }

@@ -32,6 +32,7 @@ class UserService(
     private val badgeRepository: BadgeRepository,
     private val jwtUtils: JwtUtils,
 ) {
+    @Transactional
     fun login(code: String): String {
         val restTemplate = RestTemplate()
         val mapper = jacksonObjectMapper()
@@ -42,10 +43,10 @@ class UserService(
 
         val body: MultiValueMap<String, String> = LinkedMultiValueMap()
         body.add("grant_type", "authorization_code")
-        body.add("client_id", "6f93d7eeed22bda00467a44225180c61")
+        body.add("client_id", "d9d7679d11df6ee7be85c04af10ce5d7")
         body.add("redirect_uri", "http://localhost:3000")
         body.add("code", code)
-        body.add("client_secret", "j58Lhf5ldXueahWPppu00oZSCqBH4kLd")
+        body.add("client_secret", "2WulsDhs7e7OyBOVTq4J9pBeeu3PZ3CA")
 
         val requestEntity = HttpEntity(body, headers)
 
@@ -75,16 +76,21 @@ class UserService(
         val myResponse: ResponseEntity<String> =
             restTemplate.exchange(
                 myInfoUrl,
-                HttpMethod.GET,
+                HttpMethod.POST,
                 myRequestEntity,
                 String::class.java,
             )
 
+        println(myResponse)
         val kakaoResponse = mapper.readValue(myResponse.body, KakaoMy::class.java)
 
         val id = kakaoResponse.id
-        val name = kakaoResponse.kakaoAccount.name
+        val name = kakaoResponse.kakaoAccount.profile.nickname
         val email = kakaoResponse.kakaoAccount.email
+
+        userRepository.findByKakaoId(id)?.let {
+            return jwtUtils.createToken(it.id)
+        }
 
         val user = userRepository.save(User(name = name, kakaoId = id, email = email))
 

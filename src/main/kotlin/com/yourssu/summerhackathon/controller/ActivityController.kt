@@ -28,7 +28,7 @@ class ActivityController(
 
     @PostMapping("/activities/{activity-id}/daily")
     fun createDailyActivity(
-        @Parameter(hidden = true)@Auth auth: AuthUser,
+        @Parameter(hidden = true) @Auth auth: AuthUser,
         @PathVariable("activity-id") activityId: Long,
         @RequestBody request: DailyActivityRequest,
     ) {
@@ -39,4 +39,18 @@ class ActivityController(
     fun searchExercise(
         @RequestParam name: String,
     ): ActivitiesResponse = ActivitiesResponse(activityService.searchExercise(name))
+
+    @GetMapping("/activities/month/my")
+    fun searchMonthActivities(
+        @Parameter(hidden = true) @Auth auth: AuthUser,
+        @RequestParam("year") year: Int,
+        @RequestParam("month") month: Int,
+    ): ActivitiesResponse = ActivitiesResponse(activityService.findMonthActivity(auth.userId, year, month))
+
+    @GetMapping("/activities/month/friends/{friend-id}")
+    fun searchMonthActivitiesFriend(
+        @PathVariable("friend-id") friendId: Long,
+        @RequestParam("year") year: Int,
+        @RequestParam("month") month: Int,
+    ): ActivitiesResponse = ActivitiesResponse(activityService.findMonthActivity(friendId, year, month))
 }
