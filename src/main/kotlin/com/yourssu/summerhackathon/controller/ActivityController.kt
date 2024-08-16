@@ -54,4 +54,9 @@ class ActivityController(
         @RequestParam("year") year: Int,
         @RequestParam("month") month: Int,
     ): DailyActivitiesResponse = DailyActivitiesResponse(activityService.findMonthActivity(friendId, year, month))
+
+    @GetMapping("/activities/daily/{daily-activity-id}")
+    fun getDailyActivity(
+        @PathVariable("daily-activity-id") dailyActivityId: Long,
+    ) = activityService.getDailyActivity(dailyActivityId)
 }

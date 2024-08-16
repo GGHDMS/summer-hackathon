@@ -3,6 +3,7 @@ package com.yourssu.summerhackathon.service
 import com.yourssu.summerhackathon.dto.request.ActivityRequest
 import com.yourssu.summerhackathon.dto.request.DailyActivityRequest
 import com.yourssu.summerhackathon.dto.response.ActivityResponse
+import com.yourssu.summerhackathon.dto.response.DailyActivityDetailsResponse
 import com.yourssu.summerhackathon.dto.response.DailyActivityResponse
 import com.yourssu.summerhackathon.entity.Activity
 import com.yourssu.summerhackathon.entity.DailyActivity
@@ -115,6 +116,20 @@ class ActivityService(
                 exercise = it.activity.exercise.name,
             )
         }
+    }
+
+    fun getDailyActivity(dailyActivityId: Long): DailyActivityDetailsResponse {
+        val dailyActivity =
+            dailyActivityRepository.findByIdOrNull(dailyActivityId)
+                ?: throw RuntimeException("Daily Activity not found")
+
+        return DailyActivityDetailsResponse(
+            activityId = dailyActivity.activity.id,
+            exerciseName = dailyActivity.activity.exercise.name,
+            userName = dailyActivity.user.name,
+            startTime = dailyActivity.startTime,
+            endTime = dailyActivity.endTime,
+        )
     }
 
     fun calculateAchievementRate(activity: Activity): Double {
