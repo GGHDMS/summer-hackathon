@@ -15,11 +15,9 @@ import org.springframework.web.method.support.ModelAndViewContainer
 class AuthArgumentResolver(
     private val jwtUtils: JwtUtils,
 ) : HandlerMethodArgumentResolver {
-
-    override fun supportsParameter(parameter: MethodParameter): Boolean {
-        return (parameter.getParameterAnnotation(Auth::class.java) != null) &&
-                (parameter.parameterType == AuthUser::class.java)
-    }
+    override fun supportsParameter(parameter: MethodParameter): Boolean =
+        (parameter.getParameterAnnotation(Auth::class.java) != null) &&
+            (parameter.parameterType == AuthUser::class.java)
 
     override fun resolveArgument(
         parameter: MethodParameter,
@@ -30,9 +28,11 @@ class AuthArgumentResolver(
         val request = (webRequest as ServletWebRequest).request
         val token = resolveToken(request)
 
+        println("token: $token")
         return if (token != null && jwtUtils.validateToken(token)) {
+            println("token: $token")
             val userId = jwtUtils.getUserIdFromToken(token)
-            AuthUser(userId)  // AuthUser 객체를 반환
+            AuthUser(userId) // AuthUser 객체를 반환
         } else {
             null
         }
@@ -42,6 +42,8 @@ class AuthArgumentResolver(
         val bearerToken = request.getHeader("Authorization")
         return if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             bearerToken.substring(7)
-        } else null
+        } else {
+            null
+        }
     }
 }

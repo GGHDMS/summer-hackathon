@@ -39,6 +39,7 @@ class JwtUtils {
                 .parseClaimsJws(token)
             true
         } catch (e: Exception) {
+            println(e.message)
             false
         }
 
