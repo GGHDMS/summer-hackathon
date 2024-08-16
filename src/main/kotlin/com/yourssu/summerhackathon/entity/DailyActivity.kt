@@ -16,6 +16,9 @@ class DailyActivity(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "activity_id")
     val activity: Activity,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    val user: User,
     val startTime: LocalDateTime,
     val endTime: LocalDateTime,
     val location: String,

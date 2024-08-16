@@ -3,6 +3,7 @@ package com.yourssu.summerhackathon.service
 import com.yourssu.summerhackathon.dto.request.ActivityRequest
 import com.yourssu.summerhackathon.dto.request.DailyActivityRequest
 import com.yourssu.summerhackathon.dto.response.ActivityResponse
+import com.yourssu.summerhackathon.dto.response.DailyActivityResponse
 import com.yourssu.summerhackathon.entity.Activity
 import com.yourssu.summerhackathon.entity.DailyActivity
 import com.yourssu.summerhackathon.repository.ActivityRepository
@@ -59,6 +60,7 @@ class ActivityService(
                 endTime = request.endTime,
                 location = request.location,
                 memo = request.memo,
+                user = activity.user,
             ),
         )
     }
@@ -103,19 +105,14 @@ class ActivityService(
         userId: Long,
         year: Int,
         month: Int,
-    ): List<ActivityResponse> {
-        val activities = activityRepository.findAllByUserIdAndYearAndMonth(userId, year, month)
+    ): List<DailyActivityResponse> {
+        val activities = dailyActivityRepository.findAllByUserIdAndYearAndMonth(userId, year, month)
 
         return activities.map {
-            ActivityResponse(
-                activityId = it.id,
-                exerciseName = it.exercise.name,
-                userName = it.user.name,
-                exercise = it.exercise,
-                startDate = it.startDate,
-                goalFrequency = it.goalFrequency,
-                goalDuration = it.goalDuration,
-                goalPercent = calculateAchievementRate(it),
+            DailyActivityResponse(
+                startTime = it.startTime,
+                endTime = it.endTime,
+                exercise = it.activity.exercise.name,
             )
         }
     }
@@ -123,6 +120,7 @@ class ActivityService(
     fun calculateAchievementRate(activity: Activity): Double {
         val totalTarget = activity.goalFrequency * activity.goalDuration * 4
         val completedSessions = dailyActivityRepository.countDailyActivityByActivityIdAndStartTimeBefore(activity.id)
+        println(completedSessions)
         return (completedSessions.toDouble() / totalTarget) * 100
     }
 }

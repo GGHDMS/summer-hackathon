@@ -5,6 +5,7 @@ import com.yourssu.summerhackathon.dto.AuthUser
 import com.yourssu.summerhackathon.dto.request.ActivityRequest
 import com.yourssu.summerhackathon.dto.request.DailyActivityRequest
 import com.yourssu.summerhackathon.dto.response.ActivitiesResponse
+import com.yourssu.summerhackathon.dto.response.DailyActivitiesResponse
 import com.yourssu.summerhackathon.service.ActivityService
 import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.web.bind.annotation.GetMapping
@@ -45,12 +46,12 @@ class ActivityController(
         @Parameter(hidden = true) @Auth auth: AuthUser,
         @RequestParam("year") year: Int,
         @RequestParam("month") month: Int,
-    ): ActivitiesResponse = ActivitiesResponse(activityService.findMonthActivity(auth.userId, year, month))
+    ): DailyActivitiesResponse = DailyActivitiesResponse(activityService.findMonthActivity(auth.userId, year, month))
 
     @GetMapping("/activities/month/friends/{friend-id}")
     fun searchMonthActivitiesFriend(
         @PathVariable("friend-id") friendId: Long,
         @RequestParam("year") year: Int,
         @RequestParam("month") month: Int,
-    ): ActivitiesResponse = ActivitiesResponse(activityService.findMonthActivity(friendId, year, month))
+    ): DailyActivitiesResponse = DailyActivitiesResponse(activityService.findMonthActivity(friendId, year, month))
 }
