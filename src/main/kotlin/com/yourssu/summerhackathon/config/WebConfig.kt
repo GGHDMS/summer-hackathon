@@ -9,5 +9,7 @@ class WebConfig : WebMvcConfigurer {
             .addMapping("/**")
             .allowedOrigins("*")
             .allowedMethods("*")
+            .allowedHeaders("*")
+            .allowCredentials(true)
     }
 }
