@@ -6,6 +6,7 @@ import com.yourssu.summerhackathon.dto.request.ActivityRequest
 import com.yourssu.summerhackathon.dto.request.DailyActivityRequest
 import com.yourssu.summerhackathon.dto.response.ActivitiesResponse
 import com.yourssu.summerhackathon.service.ActivityService
+import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -19,7 +20,7 @@ class ActivityController(
 ) {
     @PostMapping("/activities")
     fun postActivity(
-        @Auth auth: AuthUser,
+        @Parameter(hidden = true) @Auth auth: AuthUser,
         @RequestBody request: ActivityRequest,
     ) {
         activityService.createActivity(auth.userId, request)
@@ -27,7 +28,7 @@ class ActivityController(
 
     @PostMapping("/activities/{activity-id}/daily")
     fun createDailyActivity(
-        @Auth auth: AuthUser,
+        @Parameter(hidden = true)@Auth auth: AuthUser,
         @PathVariable("activity-id") activityId: Long,
         @RequestBody request: DailyActivityRequest,
     ) {

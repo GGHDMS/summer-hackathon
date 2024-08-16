@@ -4,9 +4,12 @@ import com.yourssu.summerhackathon.annotation.Auth
 import com.yourssu.summerhackathon.dto.AuthUser
 import com.yourssu.summerhackathon.dto.JwtResponse
 import com.yourssu.summerhackathon.dto.request.LoginRequest
+import com.yourssu.summerhackathon.dto.response.ActivitiesResponse
 import com.yourssu.summerhackathon.dto.response.BadgesResponse
 import com.yourssu.summerhackathon.dto.response.UserResponse
+import com.yourssu.summerhackathon.service.ActivityService
 import com.yourssu.summerhackathon.service.UserService
+import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -16,6 +19,7 @@ import org.springframework.web.servlet.view.RedirectView
 @RestController
 class UserController(
     private val userService: UserService,
+    private val activityService: ActivityService,
 ) {
     @GetMapping("/login")
     fun getOauthLogin(): RedirectView {
@@ -36,7 +40,7 @@ class UserController(
 
     @PostMapping("/friends")
     fun addFriend(
-        @Auth authUser: AuthUser,
+        @Parameter(hidden = true) @Auth authUser: AuthUser,
         @RequestBody friendId: Long,
     ) {
         userService.addFriend(authUser.userId, friendId)
@@ -44,11 +48,16 @@ class UserController(
 
     @GetMapping("/friends")
     fun findFriends(
-        @Auth authUser: AuthUser,
+        @Parameter(hidden = true) @Auth authUser: AuthUser,
     ): List<UserResponse> = userService.findFriends(authUser.userId)
+
+    @GetMapping("/freinds/exercises")
+    fun findFriendsExercises(
+        @Parameter(hidden = true) @Auth authUser: AuthUser,
+    ): ActivitiesResponse = ActivitiesResponse(activityService.searchExercise(authUser.userId, name))
 
     @GetMapping("/badges")
     fun findBadges(
-        @Auth authUser: AuthUser,
+        @Parameter(hidden = true) @Auth authUser: AuthUser,
     ): BadgesResponse = userService.findBadges(authUser.userId)
 }

@@ -8,6 +8,7 @@ import com.yourssu.summerhackathon.entity.DailyActivity
 import com.yourssu.summerhackathon.repository.ActivityRepository
 import com.yourssu.summerhackathon.repository.DailyActivityRepository
 import com.yourssu.summerhackathon.repository.ExerciseRepository
+import com.yourssu.summerhackathon.repository.FriendRepository
 import com.yourssu.summerhackathon.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -21,6 +22,7 @@ class ActivityService(
     private val exerciseRepository: ExerciseRepository,
     private val activityRepository: ActivityRepository,
     private val dailyActivityRepository: DailyActivityRepository,
+    private val friendRepository: FriendRepository,
 ) {
     @Transactional
     fun createActivity(
@@ -60,6 +62,28 @@ class ActivityService(
 
     fun searchExercise(name: String): List<ActivityResponse> {
         val exercises = activityRepository.findAllByExerciseName(name)
+
+        return exercises.map {
+            ActivityResponse(
+                activityId = it.id,
+                exerciseName = it.exercise.name,
+                userName = it.user.name,
+                exercise = it.exercise,
+                startDate = it.startDate,
+                goalFrequency = it.goalFrequency,
+                goalDuration = it.goalDuration,
+                goalPercent = calculateAchievementRate(it),
+            )
+        }
+    }
+
+    fun searchExercise(
+        userId: Long,
+        name: String,
+    ): List<ActivityResponse> {
+        val users = friendRepository.findByFollower(userId)
+
+        val exercises = activityRepository.findAllByExerciseNameAndUserIdIn(name, users.map { it.id })
 
         return exercises.map {
             ActivityResponse(
