@@ -106,6 +106,7 @@ class UserService(
             )
         }
 
+    @Transactional
     fun addFriend(
         userId: Long,
         email: String,
