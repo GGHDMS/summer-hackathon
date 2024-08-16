@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: summer-hachathon
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/summer_hachathon
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
