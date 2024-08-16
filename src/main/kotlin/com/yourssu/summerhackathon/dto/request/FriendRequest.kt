@@ -1,5 +1,5 @@
 package com.yourssu.summerhackathon.dto.request
 
-class FriendRequest(
+data class FriendRequest(
     val email: String,
 )
