@@ -3,10 +3,13 @@ package com.yourssu.summerhackathon.service
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.yourssu.summerhackathon.dto.KakaoMy
 import com.yourssu.summerhackathon.dto.KakaoTokenResponse
+import com.yourssu.summerhackathon.dto.response.BadgeResponse
+import com.yourssu.summerhackathon.dto.response.BadgesResponse
 import com.yourssu.summerhackathon.dto.response.UserResponse
 import com.yourssu.summerhackathon.entity.Friend
 import com.yourssu.summerhackathon.entity.User
 import com.yourssu.summerhackathon.jwt.JwtUtils
+import com.yourssu.summerhackathon.repository.BadgeRepository
 import com.yourssu.summerhackathon.repository.FriendRepository
 import com.yourssu.summerhackathon.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -26,6 +29,7 @@ import org.springframework.web.client.RestTemplate
 class UserService(
     private val userRepository: UserRepository,
     private val friendRepository: FriendRepository,
+    private val badgeRepository: BadgeRepository,
     private val jwtUtils: JwtUtils,
 ) {
     fun login(code: String): String {
@@ -122,5 +126,23 @@ class UserService(
                 email = userRepository.findByIdOrNull(it.following)?.name ?: "존재하지 않는 유저",
             )
         }
+    }
+
+    fun findBadges(userId: Long): BadgesResponse {
+        val user = userRepository.findByIdOrNull(userId) ?: throw IllegalArgumentException("존재하지 않는 유저입니다.")
+
+        val badges = badgeRepository.findByUserId(user.id)
+
+        return BadgesResponse(
+            userId = user.id,
+            userName = user.name,
+            badges =
+                badges.map {
+                    BadgeResponse(
+                        id = it.id,
+                        name = it.exercise.name,
+                    )
+                },
+        )
     }
 }

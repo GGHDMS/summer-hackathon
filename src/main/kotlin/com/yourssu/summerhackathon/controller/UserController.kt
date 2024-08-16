@@ -4,6 +4,7 @@ import com.yourssu.summerhackathon.annotation.Auth
 import com.yourssu.summerhackathon.dto.AuthUser
 import com.yourssu.summerhackathon.dto.JwtResponse
 import com.yourssu.summerhackathon.dto.request.LoginRequest
+import com.yourssu.summerhackathon.dto.response.BadgesResponse
 import com.yourssu.summerhackathon.dto.response.UserResponse
 import com.yourssu.summerhackathon.service.UserService
 import org.springframework.web.bind.annotation.GetMapping
@@ -45,4 +46,9 @@ class UserController(
     fun findFriends(
         @Auth authUser: AuthUser,
     ): List<UserResponse> = userService.findFriends(authUser.userId)
+
+    @GetMapping("/badges")
+    fun findBadges(
+        @Auth authUser: AuthUser,
+    ): BadgesResponse = userService.findBadges(authUser.userId)
 }
