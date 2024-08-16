@@ -3,6 +3,7 @@ package com.yourssu.summerhackathon.controller
 import com.yourssu.summerhackathon.annotation.Auth
 import com.yourssu.summerhackathon.dto.AuthUser
 import com.yourssu.summerhackathon.dto.JwtResponse
+import com.yourssu.summerhackathon.dto.request.FriendRequest
 import com.yourssu.summerhackathon.dto.request.LoginRequest
 import com.yourssu.summerhackathon.dto.response.ActivitiesResponse
 import com.yourssu.summerhackathon.dto.response.BadgesResponse
@@ -41,9 +42,9 @@ class UserController(
     @PostMapping("/friends")
     fun addFriend(
         @Parameter(hidden = true) @Auth authUser: AuthUser,
-        @RequestBody friendId: Long,
+        @RequestBody friendRequest: FriendRequest,
     ) {
-        userService.addFriend(authUser.userId, friendId)
+        userService.addFriend(authUser.userId, friendRequest.email)
     }
 
     @GetMapping("/friends")

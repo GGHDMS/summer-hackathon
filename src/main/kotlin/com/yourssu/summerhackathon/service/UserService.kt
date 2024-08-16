@@ -108,10 +108,10 @@ class UserService(
 
     fun addFriend(
         userId: Long,
-        friendId: Long,
+        email: String,
     ) {
         val user = userRepository.findByIdOrNull(userId) ?: throw IllegalArgumentException("존재하지 않는 유저입니다.")
-        val friend = userRepository.findByIdOrNull(friendId) ?: throw IllegalArgumentException("존재하지 않는 유저입니다.")
+        val friend = userRepository.findByEmail(email) ?: throw IllegalArgumentException("존재하지 않는 유저입니다.")
 
         friendRepository.save(
             Friend(
