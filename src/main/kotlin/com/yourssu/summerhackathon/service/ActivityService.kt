@@ -77,13 +77,10 @@ class ActivityService(
         }
     }
 
-    fun searchExercise(
-        userId: Long,
-        name: String,
-    ): List<ActivityResponse> {
+    fun searchExercise(userId: Long): List<ActivityResponse> {
         val users = friendRepository.findByFollower(userId)
 
-        val exercises = activityRepository.findAllByExerciseNameAndUserIdIn(name, users.map { it.id })
+        val exercises = activityRepository.findAllByUserIdIn(users.map { it.id })
 
         return exercises.map {
             ActivityResponse(

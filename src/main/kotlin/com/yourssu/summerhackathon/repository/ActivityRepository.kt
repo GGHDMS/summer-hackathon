@@ -8,8 +8,5 @@ interface ActivityRepository : JpaRepository<Activity, Long> {
 
     fun findAllByExerciseName(exerciseName: String): List<Activity>
 
-    fun findAllByExerciseNameAndUserIdIn(
-        exerciseName: String,
-        userIds: List<Long>,
-    ): List<Activity>
+    fun findAllByUserIdIn(userIds: List<Long>): List<Activity>
 }

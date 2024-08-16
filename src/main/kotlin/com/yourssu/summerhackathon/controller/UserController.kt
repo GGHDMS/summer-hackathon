@@ -51,10 +51,10 @@ class UserController(
         @Parameter(hidden = true) @Auth authUser: AuthUser,
     ): List<UserResponse> = userService.findFriends(authUser.userId)
 
-    @GetMapping("/freinds/exercises")
+    @GetMapping("/friends/exercises")
     fun findFriendsExercises(
         @Parameter(hidden = true) @Auth authUser: AuthUser,
-    ): ActivitiesResponse = ActivitiesResponse(activityService.searchExercise(authUser.userId, name))
+    ): ActivitiesResponse = ActivitiesResponse(activityService.searchExercise(authUser.userId))
 
     @GetMapping("/badges")
     fun findBadges(
